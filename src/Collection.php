@@ -8,32 +8,46 @@ namespace Cloud\Collection;
  */
 class Collection 
 {
-    protected $collection;
+    private $collection;
     
     public function __construct() 
     {
         $this->collection = [];
     }
     
-    public function push($item)
+    public function push($id, $item)
     {
-        $this->collection[] = $item;
+        $this->collection[$id] = $item;
     }
     
-    /**
-     * 
-     * @return array ValidFields
-     */
+    public function merge($id, $item)
+    {
+        if ($this->exist($id)) {
+            $item = !is_array($item) ? [$item] : $item;
+            $this->collection[$id] = array_merge($this->collection[$id], $item);
+        } else {
+            $this->push($id, $item);
+        }
+    }
+    
+    public function get($id)
+    {
+        return $this->collection[$id];
+    }
+    
     public function getCollection()
     {
         return $this->collection;
     }
     
-    /**
-     * clear collection
-     * 清除收集器
-     */
-    public function clear() {
+    public function clear()
+    {
         $this->collection = [];
     }
+    
+    public function exist($id)
+    {
+        return isset($this->collection[$id]);
+    }
+    
 }
